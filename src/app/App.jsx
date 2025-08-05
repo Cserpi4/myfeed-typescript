@@ -1,14 +1,16 @@
 import React from 'react';
-import './App.css';
+import Header from '../features/header/Header';
+import Home from '../features/home/Home';
 
-// Az App komponens lesz az alkalmazás gyökér komponense
-const App = () => {
+function App() {
   return (
-    <div className="app-container">
-      <h1>Welcome to MyReddit App</h1>
-      {/* Ide majd jönnek a komponensek, pl. Home, Header stb. */}
+    <div className="App">
+      <Header />
+      <main>
+        <Home />
+      </main>
     </div>
   );
-};
+}
 
 export default App;

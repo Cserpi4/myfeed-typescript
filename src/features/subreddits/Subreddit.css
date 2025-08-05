@@ -1,0 +1,23 @@
+/* src/features/subreddit/Subreddit.css */
+
+.subreddit-list {
+  padding: 1rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.subreddit-item {
+  background-color: #f6f7f8;
+  border: 1px solid #d7dadc;
+  border-radius: 16px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #0079d3;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.subreddit-item:hover {
+  background-color: #e1ecf4;
+}
