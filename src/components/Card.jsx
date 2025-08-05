@@ -1,13 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Card.css';
 
-const Card = ({ title, content, onClick }) => {
+function Card({ title, content }) {
   return (
-    <div className="card" onClick={onClick} tabIndex={0} role="button" aria-pressed="false">
-      <h2 className="card-title">{title}</h2>
-      <div className="card-content">{content}</div>
+    <div className="card">
+      {title && <h3 className="card-title">{title}</h3>}
+      {content && <p className="card-content">{content}</p>}
     </div>
   );
+}
+
+Card.propTypes = {
+  title: PropTypes.string,
+  content: PropTypes.string,
+};
+
+Card.defaultProps = {
+  title: '',
+  content: '',
 };
 
 export default Card;

@@ -1,0 +1,45 @@
+# Node modules - ne kerüljön be a repo-ba
+node_modules/
+
+# Build könyvtár (pl. Create React App build output)
+build/
+dist/
+
+# Log fájlok
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE-k, szerkesztők, operációs rendszer által generált fájlok
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Environment files - ha használsz, akkor ezek általában nem kerülnek verziózásra
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test coverage mappák
+coverage/
+
+# Jest snapshotok (ha használsz snapshot tesztelést)
+*.snap
+
+# Debugger history files
+*.history/
+
+# MacOS fájlok
+.AppleDouble
+.LSOverride
+
+# Egyéb IDE konfigurációk
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+

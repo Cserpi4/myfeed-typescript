@@ -1,0 +1,15 @@
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #222222;
+  word-wrap: break-word;
+}
+
+.comment-text a {
+  color: #0079d3; /* Reddit kék */
+  text-decoration: none;
+}
+
+.comment-text a:hover {
+  text-decoration: underline;
+}
