@@ -1,0 +1,24 @@
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ff4500; /* Reddit narancs */
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover,
+.avatar:focus {
+  transform: scale(1.1);
+  outline: none;
+  cursor: pointer;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ddd;
+  color: #666;
+  font-weight: bold;
+  font-size: 1.2rem;
+  user-select: none;
+}

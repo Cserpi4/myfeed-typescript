@@ -1,0 +1,28 @@
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.card:hover,
+.card:focus {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  transform: translateY(-3px);
+  outline: none;
+}
+
+.card-title {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  color: #ff4500; /* Reddit narancs */
+}
+
+.card-content {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.4;
+}
