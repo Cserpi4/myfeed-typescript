@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPosts } from '../../api/redditAPI';
+import { fetchPosts } from '../../api/redditApi';
 import ReactMarkdown from 'react-markdown';
 import './Home.css';
 
@@ -20,21 +20,37 @@ const Home = () => {
   return (
     <div className="home-container">
       <h2>Popular posts</h2>
-      {posts.length === 0 ? (
-        <p>Loading posts...</p>
-      ) : (
-        <ul>
-          {posts.map(post => (
-            <li key={post.id} className="post-item">
-              <h3>{post.title}</h3>
-              {post.selftext && <ReactMarkdown>{post.selftext}</ReactMarkdown>}
-              <a href={`https://reddit.com${post.permalink}`} target="_blank" rel="noopener noreferrer">
-                View on Reddit
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      {posts.length === 0 && <p>Loading posts...</p>}
+      <ul className="posts-list">
+        {posts.map(post => (
+          <li key={post.id} className="post-card">
+            <h3 className="post-title">{post.title}</h3>
+
+            {post.preview && post.preview.images && post.preview.images[0] && (
+              <img
+                className="post-image"
+                src={post.preview.images[0].source.url.replace(/&amp;/g, '&')}
+                alt={post.title}
+              />
+            )}
+
+            {post.selftext && (
+              <div className="post-content">
+                <ReactMarkdown>{post.selftext}</ReactMarkdown>
+              </div>
+            )}
+
+            <a
+              href={`https://reddit.com${post.permalink}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="post-link"
+            >
+              View on Reddit
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
