@@ -13,6 +13,12 @@ h2 {
   font-weight: 700;
 }
 
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .posts-list {
   list-style: none;
   padding: 0;
