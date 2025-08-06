@@ -6,7 +6,7 @@ import commentReducer from '../features/comment/commentSlice';
 import headerReducer from '../features/header/headerSlice';
 import homeReducer from '../features/home/homeSlice';
 import postReducer from '../features/post/postSlice';
-import subredditReducer from '../features/subreddit/subredditSlice';
+import subredditReducer from '../features/subreddits/subredditSlice';
 
 const rootReducer = combineReducers({
   avatar: avatarReducer,
