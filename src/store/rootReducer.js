@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   header: headerReducer,
   home: homeReducer,
   post: postReducer,
-  subreddit: subredditReducer,
+  subreddits: subredditReducer,
 });
 
 export default rootReducer;

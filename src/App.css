@@ -3,8 +3,8 @@
   margin: 0 auto;
   padding: 20px 30px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fafafa; /* világos, tiszta háttér */
-  color: #1a1a1a; /* sötét, de nem fekete szöveg */
+  background-color: #fafafa;
+  color: #1a1a1a;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@
 
 h1 {
   text-align: center;
-  color: #ff4500; /* Reddit narancs */
+  color: #ff4500;
   font-weight: 700;
   font-size: 2.8rem;
   margin-bottom: 40px;
@@ -20,4 +20,21 @@ h1 {
   text-transform: uppercase;
   font-family: 'Roboto', sans-serif;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 💡 ÚJ: Layout a main résznek */
+.main-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* 💡 A Home rész szépen kitölti a helyet */
+.home-container {
+  flex: 1;
+}
+
+/* 💡 A Subreddit sidebar mérete fix marad */
+.subreddit-sidebar {
+  width: 260px;
 }

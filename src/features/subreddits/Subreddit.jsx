@@ -1,41 +1,35 @@
-// src/features/subreddit/Subreddit.jsx
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchSubreddits } from './subredditSlice';
 import './Subreddit.css';
 
-const Subreddit = ({ onSelect }) => {
+const Subreddit = () => {
   const dispatch = useDispatch();
-  const subreddits = useSelector(state => state.subreddit.subreddits);
-  const status = useSelector(state => state.subreddit.status);
-  const error = useSelector(state => state.subreddit.error);
+  const { subreddits, loading, error } = useSelector((state) => state.subreddits);
 
   useEffect(() => {
     dispatch(fetchSubreddits());
   }, [dispatch]);
 
-  if (status === 'loading') {
-    return <div className="subreddit-loading">Loading subreddits...</div>;
-  }
-
-  if (status === 'failed') {
-    return <div className="subreddit-error">Error: {error}</div>;
-  }
+  if (loading) return <p className="loading">Loading subreddits...</p>;
+  if (error) return <p className="error">Error: {error}</p>;
 
   return (
-    <div className="subreddit-list">
-      {subreddits.length === 0 && <p>No subreddits found.</p>}
-      {subreddits.map(sub => (
-        <button
-          key={sub.id}
-          className="subreddit-item"
-          onClick={() => onSelect(sub.display_name)}
-          aria-label={`Select subreddit ${sub.display_name}`}
-        >
-          {sub.display_name_prefixed}
-        </button>
-      ))}
-    </div>
+    <aside className="subreddit-sidebar">
+      <h3>Popular Subreddits</h3>
+      <ul>
+        {subreddits.map((sub) => (
+          <li key={sub.id} className="subreddit-item">
+            <img
+              src={sub.icon_img || 'https://www.redditinc.com/assets/images/site/reddit-logo.png'}
+              alt={sub.display_name}
+              className="subreddit-avatar"
+            />
+            <span>{sub.display_name_prefixed}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
   );
 };
 
