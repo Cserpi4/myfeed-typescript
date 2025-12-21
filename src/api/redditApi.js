@@ -1,8 +1,13 @@
 const BASE_URL = 'https://www.reddit.com';
 
+const headers = {
+  'User-Agent': 'MyRedditDemo/0.1 by Cserpi4',
+};
+
 export async function fetchPosts(subreddit = 'popular', limit = 25) {
   const response = await fetch(
-    `${BASE_URL}/r/${subreddit}.json?limit=${limit}`
+    `${BASE_URL}/r/${subreddit}.json?limit=${limit}`,
+    { headers }
   );
   if (!response.ok) throw new Error('Failed to fetch posts');
   const data = await response.json();
@@ -11,7 +16,8 @@ export async function fetchPosts(subreddit = 'popular', limit = 25) {
 
 export async function fetchComments(postId) {
   const response = await fetch(
-    `${BASE_URL}/comments/${postId}.json`
+    `${BASE_URL}/comments/${postId}.json`,
+    { headers }
   );
   if (!response.ok) {
     throw new Error(`Failed to fetch comments for post ID: ${postId}`);
@@ -22,7 +28,8 @@ export async function fetchComments(postId) {
 
 export async function fetchSubreddits(limit = 10) {
   const response = await fetch(
-    `${BASE_URL}/subreddits/popular.json?limit=${limit}`
+    `${BASE_URL}/subreddits/popular.json?limit=${limit}`,
+    { headers }
   );
   if (!response.ok) {
     throw new Error('Failed to fetch subreddits');
@@ -33,7 +40,8 @@ export async function fetchSubreddits(limit = 10) {
 
 export async function search(query, limit = 25) {
   const response = await fetch(
-    `${BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}`
+    `${BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=${limit}`,
+    { headers }
   );
   if (!response.ok) {
     throw new Error(`Failed to search Reddit for query: ${query}`);
