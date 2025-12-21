@@ -3,3 +3,8 @@
   to = "https://www.reddit.com/:splat"
   status = 200
   force = true
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    User-Agent = "MyRedditDemo/0.1 by Cserpi4"
