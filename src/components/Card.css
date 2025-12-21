@@ -5,8 +5,15 @@
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
   padding: 1rem;
   gap: 1rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.15);
+}
+
+/* --- Votes --- */
 .votes {
   display: flex;
   flex-direction: column;
@@ -17,13 +24,36 @@
   min-width: 40px;
 }
 
+.votes p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .votes button {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
+  color: #999;
+  transition: color 0.2s ease, transform 0.1s ease;
 }
 
+.votes button:hover {
+  color: #ff4500;
+  transform: scale(1.1);
+}
+
+/* Aktív szavazás állapot */
+.vote-button.up.active {
+  color: #ff4500;
+}
+
+.vote-button.down.active {
+  color: #7193ff;
+}
+
+/* --- Content --- */
 .card-content {
   flex: 1;
   display: flex;
@@ -39,9 +69,9 @@
   margin-bottom: 0.25rem;
 }
 
-.subreddit-avatar {
-  width: 24px;
-  height: 24px;
+.avatar {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
@@ -68,22 +98,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.avatar {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-
+/* --- Footer --- */
 .card-footer {
   display: flex;
   justify-content: space-between;
@@ -100,4 +115,104 @@
 
 .card-footer a:hover {
   text-decoration: underline;
+}
+
+/* --- Vote animation --- */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.vote-score.pop {
+  animation: pop 0.3s ease;
+}
+
+/* --- Comments Section --- */
+.comment-toggle {
+  background: none;
+  border: none;
+  color: #0079d3;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.comment-toggle:hover {
+  text-decoration: underline;
+  color: #005fa3;
+}
+
+.comments-section {
+  margin-top: 0.75rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.75rem;
+}
+
+.comment {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.comment-author {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.comment-body {
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.loading,
+.no-comments {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+/* --- Smooth show/hide animation for comments --- */
+.comments-section {
+  margin-top: 0.75rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.75rem;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scaleY(0.95);
+  transform-origin: top;
+  transition: all 0.3s ease;
+}
+
+.comments-section.show {
+  max-height: 800px; /* elég nagy, hogy a legtöbb komment beleférjen */
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* --- Fade-in animation for posts --- */
+.card {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

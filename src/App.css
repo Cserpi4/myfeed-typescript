@@ -1,10 +1,43 @@
+/* === Fonts === */
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Proza+Libre:wght@700&display=swap");
+
+:root {
+  --bg-color: #fafafa;
+  --text-color: #1a1a1a;
+  --accent-color: #ff4500;
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --header-bg: #ff4500;
+  --header-text: #ffffff;
+}
+
+body[data-theme='dark'] {
+  --bg-color: #1a1a1a;
+  --text-color: #f1f1f1;
+  --accent-color: #ff6f3c;
+  --card-bg: #2a2a2a;
+  --card-shadow: rgba(255, 255, 255, 0.05);
+  --header-bg: #2a2a2a;
+  --header-text: #f1f1f1;
+}
+
+/* 🌍 Globális alap */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🧱 Alap layout */
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fafafa;
-  color: #1a1a1a;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,29 +45,96 @@
 
 h1 {
   text-align: center;
-  color: #ff4500;
+  color: var(--accent-color);
   font-weight: 700;
   font-size: 2.8rem;
   margin-bottom: 40px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-family: 'Roboto', sans-serif;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* 💡 ÚJ: Layout a main résznek */
+/* 💡 Layout a main résznek */
 .main-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px; /* fix sidebar, rugalmas feed */
   gap: 2rem;
   align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* 💡 A Home rész szépen kitölti a helyet */
 .home-container {
-  flex: 1;
+  min-width: 0; /* fontos: megakadályozza az eltolódást */
 }
 
 /* 💡 A Subreddit sidebar mérete fix marad */
 .subreddit-sidebar {
   width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+/* 💡 Kártyák és dobozok témaszínek */
+.card,
+.subreddit-sidebar {
+  background-color: var(--card-bg);
+  box-shadow: 0 2px 8px var(--card-shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 💡 Header színek a témához */
+.header-container {
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- DARK MODE fixek az olvashatóságra --- */
+
+/* fő címek, bekezdések */
+body[data-theme='dark'] h1,
+body[data-theme='dark'] h2,
+body[data-theme='dark'] h3,
+body[data-theme='dark'] p,
+body[data-theme='dark'] span,
+body[data-theme='dark'] a {
+  color: #f1f1f1 !important;
+}
+
+/* kártyák szövegei */
+body[data-theme='dark'] .card {
+  background-color: #2a2a2a;
+  color: #f1f1f1;
+}
+
+/* kommentek háttér/szöveg */
+body[data-theme='dark'] .comment {
+  background-color: #3a3a3a;
+  color: #f1f1f1;
+}
+
+/* subreddit sidebar */
+body[data-theme='dark'] .subreddit-sidebar {
+  background-color: #2b2b2b;
+  color: #f1f1f1;
+  border-color: #444;
+}
+
+/* posztcím */
+body[data-theme='dark'] .title {
+  color: #ffffff;
+}
+
+/* linkek (pl. 💬 kommentek száma) */
+body[data-theme='dark'] a {
+  color: #4da6ff;
+}
+body[data-theme='dark'] a:hover {
+  color: #74b9ff;
 }

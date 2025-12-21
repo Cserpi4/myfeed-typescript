@@ -1,19 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './features/header/Header';
 import Home from './features/home/Home';
-import Subreddit from './features/subreddits/Subreddit'; // 💡 Ezt importáljuk
-
-import './App.css'; // Ha még nincs, itt lesz a layout CSS
+import Subreddit from './features/subreddits/Subreddit';
+import './App.css';
 
 function App() {
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
   return (
-    <div className="App">
-      <Header />
-      <main className="main-layout">
-        <Home />
-        <Subreddit />
-      </main>
-    </div>
+    <Router>
+      <div className="App">
+        <Header onToggleTheme={toggleTheme} currentTheme={theme} />
+        <main className="main-layout">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/search/:query" element={<Home />} />
+            <Route path="/r/:subreddit" element={<Home />} />
+          </Routes>
+          <Subreddit />
+        </main>
+      </div>
+    </Router>
   );
 }
 
