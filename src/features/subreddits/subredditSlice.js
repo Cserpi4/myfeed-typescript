@@ -1,21 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchSubreddits as fetchSubredditAPI, fetchPosts } from '../../api/redditApi';
+import redditApi from '../../api/redditApi';
 
 // --- Fetch popular subreddits ---
 export const fetchSubreddits = createAsyncThunk(
   'subreddits/fetchSubreddits',
-  async () => {
-    const data = await fetchSubredditAPI();
-    return data;
+  async (_, { rejectWithValue }) => {
+    try {
+      return await redditApi.fetchSubreddits();
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch subreddits');
+    }
   }
 );
 
 // --- Fetch posts for selected subreddit ---
 export const fetchPostsBySubreddit = createAsyncThunk(
   'subreddits/fetchPostsBySubreddit',
-  async (subreddit) => {
-    const data = await fetchPosts(subreddit);
-    return data;
+  async (subreddit, { rejectWithValue }) => {
+    try {
+      return await redditApi.fetchSubreddit(subreddit);
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch subreddit posts');
+    }
   }
 );
 
@@ -29,7 +35,7 @@ const subredditSlice = createSlice({
     error: null,
   },
   reducers: {
-    setActiveSubreddit: (state, action) => {
+    setActiveSubreddit(state, action) {
       state.activeSubreddit = action.payload;
     },
   },
@@ -42,24 +48,29 @@ const subredditSlice = createSlice({
       })
       .addCase(fetchSubreddits.fulfilled, (state, action) => {
         state.loading = false;
-        state.subreddits = action.payload;
+        state.subreddits =
+          action.payload?.data?.children?.map((child) => child.data) || [];
       })
       .addCase(fetchSubreddits.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
+        state.subreddits = [];
       })
 
-      // --- Load posts by subreddit ---
+      // --- Load posts by subreddit (NORMALIZÁLT) ---
       .addCase(fetchPostsBySubreddit.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchPostsBySubreddit.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts = action.payload;
+        state.posts =
+          action.payload?.data?.children?.map((child) => child.data) || [];
       })
       .addCase(fetchPostsBySubreddit.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
+        state.posts = [];
       });
   },
 });

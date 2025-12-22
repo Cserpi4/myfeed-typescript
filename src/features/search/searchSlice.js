@@ -1,12 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { search } from '../../api/redditApi';
+import redditApi from '../../api/redditApi';
 
 // --- Async thunk for Reddit search ---
 export const fetchSearchResults = createAsyncThunk(
   'search/fetchSearchResults',
-  async (query) => {
-    const results = await search(query);
-    return results;
+  async (query, { rejectWithValue }) => {
+    try {
+      const response = await redditApi.search(query);
+
+      return (
+        response?.data?.children?.map((child) => child.data) || []
+      );
+    } catch (error) {
+      return rejectWithValue(error.message || 'Search failed');
+    }
   }
 );
 
@@ -14,17 +21,18 @@ const searchSlice = createSlice({
   name: 'search',
   initialState: {
     query: '',
-    results: [],
+    results: [],   // ⚠️ mindig tömb
     loading: false,
     error: null,
   },
   reducers: {
-    setQuery: (state, action) => {
+    setQuery(state, action) {
       state.query = action.payload;
     },
-    clearResults: (state) => {
+    clearResults(state) {
       state.results = [];
       state.query = '';
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -39,7 +47,8 @@ const searchSlice = createSlice({
       })
       .addCase(fetchSearchResults.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
+        state.results = [];
       });
   },
 });

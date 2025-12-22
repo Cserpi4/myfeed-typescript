@@ -2,15 +2,20 @@ import React from 'react';
 import './Avatar.css';
 
 const Avatar = ({ src, alt = 'User avatar', size = 50 }) => {
+  const style = {
+    width: size,
+    height: size,
+    borderRadius: '50%',
+  };
+
   if (!src) {
-    // Ha nincs avatar URL, egy default kép vagy helyettesítő elem jelenik meg
     return (
       <div
-        className="avatar placeholder"
-        style={{ width: size, height: size, borderRadius: '50%' }}
+        className="avatar avatar--placeholder"
+        style={style}
         aria-label="No avatar"
       >
-        ?
+        <span>?</span>
       </div>
     );
   }
@@ -23,7 +28,7 @@ const Avatar = ({ src, alt = 'User avatar', size = 50 }) => {
       width={size}
       height={size}
       loading="lazy"
-      style={{ borderRadius: '50%' }}
+      style={style}
     />
   );
 };

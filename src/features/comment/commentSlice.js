@@ -1,22 +1,53 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import redditApi from '../../api/redditApi';
 
-// Példa: ha lekérnénk kommenteket egy API-ról (Reddit JSON API esetén)
-// Itt most dummy async thunk, később megírhatjuk konkrét API hívással
+// 🔥 Helper: Reddit comment tree flattenelése
+const flattenComments = (comments, depth = 0) => {
+  let result = [];
+
+  comments.forEach((item) => {
+    if (item.kind !== 't1') return;
+
+    const comment = item.data;
+
+    result.push({
+      id: comment.id,
+      author: comment.author,
+      body: comment.body,
+      score: comment.score,
+      created: comment.created_utc,
+      depth,
+    });
+
+    if (comment.replies?.data?.children?.length) {
+      result = result.concat(
+        flattenComments(comment.replies.data.children, depth + 1)
+      );
+    }
+  });
+
+  return result;
+};
+
+// --- Fetch comments for a post ---
 export const fetchComments = createAsyncThunk(
   'comment/fetchComments',
-  async (postId, thunkAPI) => {
-    const response = await fetch(`https://www.reddit.com/comments/${postId}.json`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch comments');
+  async ({ subreddit, postId }, { rejectWithValue }) => {
+    try {
+      const response = await redditApi.fetchComments(subreddit, postId);
+
+      const commentListing = response?.[1]?.data?.children || [];
+
+      return flattenComments(commentListing);
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch comments');
     }
-    const data = await response.json();
-    return data;
   }
 );
 
 const initialState = {
-  comments: [],
-  status: 'idle',
+  comments: [],      // ⚠️ mindig lapított tömb
+  loading: false,
   error: null,
 };
 
@@ -26,28 +57,27 @@ const commentSlice = createSlice({
   reducers: {
     clearComments(state) {
       state.comments = [];
-      state.status = 'idle';
+      state.loading = false;
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchComments.pending, (state) => {
-        state.status = 'loading';
+        state.loading = true;
+        state.error = null;
       })
       .addCase(fetchComments.fulfilled, (state, action) => {
-        // Reddit API JSON válasz komplex, itt csak példaként hozzuk létre a comments tömböt
-        // valójában szűrni kellene a válaszból a komment adatokat
-        state.status = 'succeeded';
-        state.comments = action.payload[1].data.children.map(child => child.data);
+        state.loading = false;
+        state.comments = action.payload;
       })
       .addCase(fetchComments.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
+        state.loading = false;
+        state.error = action.payload || action.error.message;
+        state.comments = [];
       });
   },
 });
 
 export const { clearComments } = commentSlice.actions;
-
 export default commentSlice.reducer;

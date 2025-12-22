@@ -1,48 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchTerm } from './headerSlice';
+import { fetchSearchResults, clearResults } from '../search/searchSlice';
 import { useNavigate } from 'react-router-dom';
-import { search } from '../../api/redditApi';
 import './Header.css';
 
 const Header = ({ onToggleTheme, currentTheme }) => {
   const dispatch = useDispatch();
-  const searchTerm = useSelector((state) => state.header.searchTerm);
   const navigate = useNavigate();
 
-  const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const searchTerm = useSelector((state) => state.header.searchTerm);
+  const { results, loading } = useSelector((state) => state.search);
+
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  // 🔍 debounce + Redux search
   useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (searchTerm.trim().length < 3) {
-        setSuggestions([]);
-        return;
-      }
+    if (searchTerm.trim().length < 3) {
+      dispatch(clearResults());
+      return;
+    }
 
-      try {
-        setLoading(true);
-        const results = await search(searchTerm, 6);
-        setSuggestions(results.slice(0, 6));
-      } catch (err) {
-        console.error('Search suggestions failed:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const timeout = setTimeout(() => {
+      dispatch(fetchSearchResults(searchTerm));
+    }, 400);
 
-    const timeout = setTimeout(fetchSuggestions, 400); // kis debounce
     return () => clearTimeout(timeout);
-  }, [searchTerm]);
+  }, [dispatch, searchTerm]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const query = searchTerm.trim();
-    if (query) {
-      navigate(`/search/${encodeURIComponent(query)}`);
-      setShowSuggestions(false);
-    }
+
+    if (!query) return;
+
+    navigate(`/search/${encodeURIComponent(query)}`);
+    setShowSuggestions(false);
   };
 
   const handleSelectSuggestion = (text) => {
@@ -53,7 +46,11 @@ const Header = ({ onToggleTheme, currentTheme }) => {
 
   return (
     <header className="header-container">
-      <div className="logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+      <div
+        className="logo"
+        onClick={() => navigate('/')}
+        style={{ cursor: 'pointer' }}
+      >
         MyReddit
       </div>
 
@@ -78,19 +75,23 @@ const Header = ({ onToggleTheme, currentTheme }) => {
           {showSuggestions && searchTerm.trim().length >= 3 && (
             <ul className="search-suggestions">
               {loading && <li className="loading">Loading...</li>}
-              {!loading && suggestions.length === 0 && (
+
+              {!loading && results.length === 0 && (
                 <li className="no-results">No results</li>
               )}
+
               {!loading &&
-                suggestions.map((s) => (
+                results.slice(0, 6).map((item) => (
                   <li
-                    key={s.id}
-                    onClick={() =>
-                      handleSelectSuggestion(s.display_name_prefixed || s.title || searchTerm)
-                    }
+                    key={item.id}
                     className="suggestion-item"
+                    onClick={() =>
+                      handleSelectSuggestion(
+                        item.display_name_prefixed || item.title
+                      )
+                    }
                   >
-                    {s.display_name_prefixed || s.title}
+                    {item.display_name_prefixed || item.title}
                   </li>
                 ))}
             </ul>

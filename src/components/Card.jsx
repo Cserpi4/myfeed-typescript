@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
+import Comment from '../features/comment/Comment';
 import './Card.css';
 
 const Card = ({ post }) => {
   const {
+    id,
     title,
     thumbnail,
     preview,
+    subreddit,
     subreddit_name_prefixed,
     author,
     ups,
     created_utc,
     num_comments,
-    permalink,
     sr_detail,
     subreddit_icon_img,
   } = post;
@@ -27,15 +29,13 @@ const Card = ({ post }) => {
 
   const avatarUrl = sr_detail?.icon_img || subreddit_icon_img;
 
-  // 💡 Upvote/Downvote state
+  // 💡 Vote state (UI only)
   const [vote, setVote] = useState(0);
   const [score, setScore] = useState(ups);
   const [animate, setAnimate] = useState(false);
 
-  // 💬 Comments state
-  const [comments, setComments] = useState([]);
+  // 💬 Comment toggle
   const [showComments, setShowComments] = useState(false);
-  const [loadingComments, setLoadingComments] = useState(false);
 
   const triggerAnimation = () => {
     setAnimate(true);
@@ -66,30 +66,6 @@ const Card = ({ post }) => {
     triggerAnimation();
   };
 
-  const fetchComments = async () => {
-    try {
-      setLoadingComments(true);
-      const response = await fetch(`${permalink}.json`);
-      const data = await response.json();
-      const commentData =
-        data[1]?.data?.children
-          ?.filter((child) => child.kind === 't1')
-          .map((child) => child.data) || [];
-      setComments(commentData);
-    } catch (err) {
-      console.error('Error fetching comments:', err);
-    } finally {
-      setLoadingComments(false);
-    }
-  };
-
-  const toggleComments = () => {
-    if (!showComments) {
-      fetchComments();
-    }
-    setShowComments(!showComments);
-  };
-
   return (
     <div className="card">
       <div className="votes">
@@ -104,12 +80,14 @@ const Card = ({ post }) => {
           {score >= 1000 ? (score / 1000).toFixed(1) + 'k' : score}
         </p>
 
-        <button
-          className={`vote-button down ${vote === -1 ? 'active' : ''}`}
-          onClick={handleDownvote}
+        <a
+          href={`https://reddit.com/r/${subreddit}/comments/${id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="vote-button down"
         >
           ⬇
-        </button>
+        </a>
       </div>
 
       <div className="card-content">
@@ -128,25 +106,18 @@ const Card = ({ post }) => {
           <span>
             Posted by <strong>{author}</strong> • {postTime}
           </span>
-          <button className="comment-toggle" onClick={toggleComments}>
+
+          <button
+            className="comment-toggle"
+            onClick={() => setShowComments((prev) => !prev)}
+          >
             💬 {num_comments} {showComments ? 'Hide' : 'Show'}
           </button>
         </div>
 
-        <div className={`comments-section ${showComments ? 'show' : ''}`}>
-          {loadingComments ? (
-            <p className="loading">Loading comments...</p>
-          ) : comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="comment">
-                <p className="comment-author">u/{comment.author}</p>
-                <p className="comment-body">{comment.body}</p>
-              </div>
-            ))
-          ) : (
-            <p className="no-comments">No comments available.</p>
-          )}
-        </div>
+        {showComments && (
+          <Comment subreddit={subreddit} postId={id} />
+        )}
       </div>
     </div>
   );

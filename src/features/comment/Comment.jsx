@@ -1,45 +1,49 @@
 // src/features/comment/Comment.jsx
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, clearComments } from './commentSlice';
 import './Comment.css';
 
-const Comment = ({ postId }) => {
+const Comment = ({ subreddit, postId }) => {
   const dispatch = useDispatch();
 
   const comments = useSelector((state) => state.comment.comments);
-  const status = useSelector((state) => state.comment.status);
+  const loading = useSelector((state) => state.comment.loading);
   const error = useSelector((state) => state.comment.error);
 
   useEffect(() => {
-    if (postId) {
-      dispatch(fetchComments(postId));
+    if (subreddit && postId) {
+      dispatch(fetchComments({ subreddit, postId }));
     }
 
-    // Tisztítás, ha a komponens eltűnik vagy változik a postId
     return () => {
       dispatch(clearComments());
     };
-  }, [dispatch, postId]);
+  }, [dispatch, subreddit, postId]);
 
-  if (status === 'loading') {
+  if (loading) {
     return <div className="comment-loading">Loading comments...</div>;
   }
 
-  if (status === 'failed') {
+  if (error) {
     return <div className="comment-error">Error: {error}</div>;
   }
 
   return (
     <div className="comment-container">
-      {comments.length === 0 && <div className="no-comments">No comments found.</div>}
+      {comments.length === 0 && (
+        <div className="no-comments">No comments found.</div>
+      )}
+
       {comments.map((comment) => (
-        <div key={comment.id} className="comment-card">
-          <div className="comment-author">{comment.author}</div>
-          <div
-            className="comment-body"
-            dangerouslySetInnerHTML={{ __html: comment.body_html || comment.body }}
-          />
+        <div
+          key={comment.id}
+          className="comment-card"
+          style={{ marginLeft: `${comment.depth * 16}px` }}
+        >
+          <div className="comment-author">u/{comment.author}</div>
+          <div className="comment-body">{comment.body}</div>
+          <div className="comment-score">⬆ {comment.score}</div>
         </div>
       ))}
     </div>

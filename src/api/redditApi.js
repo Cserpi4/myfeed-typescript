@@ -1,41 +1,37 @@
-export async function fetchPosts(subreddit = 'popular', limit = 25) {
-  const response = await fetch(
-    `/api/r/${subreddit}.json?limit=${limit}`
-  );
-  if (!response.ok) throw new Error('Failed to fetch posts');
-  const data = await response.json();
-  return data.data.children.map(child => child.data);
-}
+import client from './client';
 
-export async function fetchComments(postId) {
-  const response = await fetch(
-    `/api/comments/${postId}.json`
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch comments for post ID: ${postId}`);
-  }
-  const data = await response.json();
-  return data[1].data.children.map(child => child.data);
-}
+const redditApi = {
+  // 🔥 popular posts
+  async fetchPosts() {
+    const response = await client.get('/api/reddit/popular');
+    return response.data;
+  },
 
-export async function fetchSubreddits(limit = 10) {
-  const response = await fetch(
-    `/api/subreddits/popular.json?limit=${limit}`
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch subreddits');
-  }
-  const json = await response.json();
-  return json.data.children.map(child => child.data);
-}
+  // 🔥 subreddit posts
+  async fetchSubreddit(subreddit) {
+    const response = await client.get(`/api/reddit/subreddit/${subreddit}`);
+    return response.data;
+  },
 
-export async function search(query, limit = 25) {
-  const response = await fetch(
-    `/api/search.json?q=${encodeURIComponent(query)}&limit=${limit}`
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to search Reddit for query: ${query}`);
-  }
-  const data = await response.json();
-  return data.data.children.map(child => child.data);
-}
+  // 🔥 comments
+  async fetchComments(subreddit, postId) {
+    const response = await client.get(
+      `/api/reddit/comments/${subreddit}/${postId}`
+    );
+    return response.data;
+  },
+
+  // 🔥 subreddits list
+  async fetchSubreddits() {
+    const response = await client.get('/api/reddit/subreddits');
+    return response.data;
+  },
+
+  // 🔥 search
+  async search(query) {
+    const response = await client.get(`/api/reddit/search?q=${query}`);
+    return response.data;
+  },
+};
+
+export default redditApi;

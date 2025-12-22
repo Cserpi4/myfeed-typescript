@@ -1,22 +1,27 @@
-// src/features/post/postSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import redditApi from '../../api/redditApi';
 
-// Példa async thunk, amivel post adatok jönnek egy Reddit API végpontról (pl. egy adott subreddit postjai)
-export const fetchPosts = createAsyncThunk(
-  'post/fetchPosts',
-  async (subreddit = 'popular') => {
-    const response = await fetch(`https://www.reddit.com/r/${subreddit}.json`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts');
+export const fetchPostFeed = createAsyncThunk(
+  'post/fetchPostFeed',
+  async (subreddit = 'popular', { rejectWithValue }) => {
+    try {
+      const response =
+        subreddit === 'popular'
+          ? await redditApi.fetchPosts()
+          : await redditApi.fetchSubreddit(subreddit);
+
+      return (
+        response?.data?.children?.map((child) => child.data) || []
+      );
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch posts');
     }
-    const data = await response.json();
-    return data.data.children.map(child => child.data);
   }
 );
 
 const initialState = {
   posts: [],
-  status: 'idle',
+  status: 'idle', // idle | loading | succeeded | failed
   error: null,
 };
 
@@ -32,20 +37,20 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPosts.pending, (state) => {
+      .addCase(fetchPostFeed.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
+      .addCase(fetchPostFeed.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.posts = action.payload;
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchPostFeed.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
+        state.posts = [];
       });
   },
 });
 
 export const { clearPosts } = postSlice.actions;
-
 export default postSlice.reducer;

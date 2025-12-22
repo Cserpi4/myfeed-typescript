@@ -1,45 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { fetchPosts, search } from '../../api/redditApi';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts } from './homeSlice';
 import Card from '../../components/Card';
 import './Home.css';
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const { activeSubreddit } = useSelector((state) => state.subreddits);
-  const searchTerm = useSelector((state) => state.header.searchTerm);
+  const posts = useSelector((state) => state.home.posts);
+  const loading = useSelector((state) => state.home.loading);
+  const error = useSelector((state) => state.home.error);
+
+  const activeSubreddit = useSelector(
+    (state) => state.subreddits?.activeSubreddit
+  );
+
+  const searchTerm = useSelector(
+    (state) => state.header?.searchTerm
+  );
 
   useEffect(() => {
-    const loadPosts = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        let results;
-        if (searchTerm) {
-          // 🔍 keresés
-          results = await search(searchTerm);
-        } else if (activeSubreddit && activeSubreddit !== 'popular') {
-          // 📚 adott subreddit posztjai
-          results = await fetchPosts(activeSubreddit);
-        } else {
-          // 🏠 alapértelmezett
-          results = await fetchPosts('popular');
-        }
-        setPosts(results);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(
+      fetchPosts({
+        subreddit: activeSubreddit || 'popular',
+        searchTerm: searchTerm || '',
+      })
+    );
+  }, [dispatch, activeSubreddit, searchTerm]);
 
-    loadPosts();
-  }, [searchTerm, activeSubreddit]);
-
-  if (error) return <div className="error">Error loading posts: {error}</div>;
+  if (error) {
+    return <div className="error">Error loading posts: {error}</div>;
+  }
 
   return (
     <div className="home-container">
@@ -51,30 +42,22 @@ const Home = () => {
           : 'Popular posts'}
       </h2>
 
-      {/* 🔙 Vissza gomb */}
-      {searchTerm && (
-        <button
-          className="back-button"
-          onClick={() => window.location.assign('/')}
-        >
-          ← Back to Popular posts
-        </button>
-      )}
+      <div className="posts-list">
+        {loading && (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="skeleton-card" />
+          ))
+        )}
 
-      {/* ⏳ Betöltés közben skeleton */}
-      {loading ? (
-        <div className="posts-list">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="skeleton-card"></div>
-          ))}
-        </div>
-      ) : (
-        <div className="posts-list">
-          {posts.map((post) => (
+        {!loading && posts.length === 0 && (
+          <div>No posts found.</div>
+        )}
+
+        {!loading &&
+          posts.map((post) => (
             <Card key={post.id} post={post} />
           ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 };

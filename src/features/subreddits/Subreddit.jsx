@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSubreddits,
-  fetchPostsBySubreddit,
   setActiveSubreddit,
 } from './subredditSlice';
 import './Subreddit.css';
 
 const Subreddit = () => {
   const dispatch = useDispatch();
+
   const { subreddits, loading, error, activeSubreddit } = useSelector(
     (state) => state.subreddits
   );
@@ -19,17 +19,27 @@ const Subreddit = () => {
 
   const handleSubredditClick = (subredditName) => {
     dispatch(setActiveSubreddit(subredditName));
-    dispatch(fetchPostsBySubreddit(subredditName));
   };
 
-  if (loading) return <p className="loading">Loading subreddits...</p>;
-  if (error) return <p className="error">Error: {error}</p>;
+  if (loading) {
+    return <p className="loading">Loading subreddits...</p>;
+  }
+
+  if (error) {
+    return <p className="error">Error: {error}</p>;
+  }
 
   return (
     <aside className="subreddit-sidebar">
-      <h3 onClick={() => handleSubredditClick('popular')} className="subreddit-header">
+      <h3
+        onClick={() => handleSubredditClick('popular')}
+        className={`subreddit-header ${
+          activeSubreddit === 'popular' ? 'active' : ''
+        }`}
+      >
         Popular Subreddits
       </h3>
+
       <ul>
         {subreddits.map((sub) => (
           <li
@@ -42,7 +52,7 @@ const Subreddit = () => {
             <img
               src={
                 sub.icon_img ||
-                sub.community_icon?.split('?')[0] || // közösségi ikon URL fix
+                sub.community_icon?.split('?')[0] ||
                 'https://www.redditinc.com/assets/images/site/reddit-logo.png'
               }
               alt={sub.display_name}

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { parseMarkdown } from '../utils/markdownParser';
+import ReactMarkdown from 'react-markdown';
 
 function CommentText({ text }) {
   return (
-    <div
-      className="comment-text"
-      dangerouslySetInnerHTML={{ __html: parseMarkdown(text) }}
-    />
+    <div className="comment-text">
+      <ReactMarkdown>{text}</ReactMarkdown>
+    </div>
   );
 }
 
