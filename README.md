@@ -1,12 +1,3 @@
-Igen 👍 **ezt a README-t most már MUSZÁJ frissíteni**, mert **nem igazat állít** az app jelenlegi működéséről.
-Adok egy **TELJESEN FRISS, PONTOS README.md-t**, amit **egy az egyben fel tudsz tölteni GitHubra**.
-
-Ez már **full-stack demo** szint, nem „sima frontend”.
-
----
-
-## ✅ FRISSÍTETT `README.md`
-
 ```md
 # MyReddit (Demo)
 
