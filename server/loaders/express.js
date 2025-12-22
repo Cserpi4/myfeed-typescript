@@ -6,10 +6,14 @@ import errorMiddleware from '../middlewares/errorMiddleware.js';
 const expressLoader = () => {
   const app = express();
 
-  // 🔥 IDEIGLENES: engedj minden origint
+  // ✅ HELYES CORS BEÁLLÍTÁS (Netlify + local dev)
   app.use(
     cors({
-      origin: '*',
+      origin: [
+        'https://myreddit-demo.netlify.app',
+        'http://localhost:3001',
+      ],
+      methods: ['GET', 'POST'],
     })
   );
 
