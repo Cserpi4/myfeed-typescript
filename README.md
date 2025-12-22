@@ -168,22 +168,3 @@ http://localhost:3001
 This project is for **educational purposes only**.
 
 ```
-
----
-
-## ✅ Következő lépés GitHubon
-
-1. Cseréld le a régi `README.md`-t erre
-2. `git add README.md`
-3. `git commit -m "Update README for full-stack architecture"`
-4. `git push`
-
----
-
-Ha szeretnéd, a következő lépésben:
-- 📦 **külön frontend / backend deploy stratégia (Netlify + Render / Railway)**  
-- 🧠 **README badge-ek + screenshot**  
-- 🎯 **CV-barát projektleírás**
-
-Csak mondd 👌
-```
