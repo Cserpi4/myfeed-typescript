@@ -1,16 +1,9 @@
-```md
-# MyReddit (Demo)
+MyReddit (Demo)
 
-A Reddit-style demo application built with **React**, **Redux Toolkit**, and a custom **Express backend**.  
-The app uses the **Reddit JSON API** through a backend proxy and displays posts, subreddits, search results, and comments in a clean, responsive UI.
+A Reddit-style demo application built with React, Redux Toolkit, and a custom Express backend.  
+The app uses the Reddit JSON API through a backend proxy and displays posts, subreddits, search results, and comments in a clean, responsive UI.
 
-🚧 Live Demo: *Coming soon*  
-📦 GitHub Repo: https://github.com/Cserpi4/myreddit-demo
-
----
-
-## 🚀 Features
-
+Features
 - Browse popular posts and subreddits
 - Subreddit sidebar with icons
 - Search posts with live suggestions
@@ -20,26 +13,21 @@ The app uses the **Reddit JSON API** through a backend proxy and displays posts,
 - Client-side voting UI (demo)
 - Clean Redux architecture with normalized state
 
----
+Tech stack
 
-## 🧠 Architecture Overview
-
-This project uses a **full-stack setup**:
-
-### Frontend
-- **React**
-- **Redux Toolkit**
+Frontend
+- React
+- Redux Toolkit
 - Async state handling with `createAsyncThunk`
 - Feature-based folder structure
 - UI-only components separated from data logic
 
-### Backend
-- **Node.js + Express**
-- Acts as a **proxy** to the Reddit JSON API
+Backend
+- Node.js
+- Express
+- Acts as a proxy to the Reddit JSON API
 - Handles CORS and centralizes API calls
 - Keeps the frontend clean and secure
-
-```
 
 Frontend (React)
 ↓ axios
@@ -47,124 +35,8 @@ Backend (Express)
 ↓ fetch
 Reddit JSON API
 
-```
+Author
 
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- React
-- Redux Toolkit
-- JavaScript (ES6+)
-- CSS
-- react-markdown
-
-### Backend
-- Node.js
-- Express
-- Reddit JSON API
-
----
-
-## 📁 Project Structure (Simplified)
-
-```
-
-myreddit/
-├── server/                # Express backend
-│   ├── controllers/
-│   ├── services/
-│   ├── routes/
-│   └── utils/
-│
-├── src/
-│   ├── api/               # axios + API layer
-│   ├── components/        # reusable UI components
-│   ├── features/          # Redux slices + feature components
-│   └── app/               # store configuration
-
-````
-
----
-
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/Cserpi4/myreddit-demo.git
-cd myreddit-demo
-````
-
----
-
-### 2️⃣ Install dependencies
-
-#### Frontend
-
-```bash
-npm install
-```
-
-#### Backend
-
-```bash
-cd server
-npm install
-```
-
----
-
-### 3️⃣ Run the application
-
-#### Start backend (Express)
-
-```bash
-cd server
-npm start
-```
-
-Backend runs on:
-
-```
-http://localhost:3000
-```
-
-#### Start frontend (React)
-
-```bash
-npm start
-```
-
-Frontend runs on:
-
-```
-http://localhost:3001
-```
-
----
-
-## ⚠️ Notes
-
-* This is a **demo project**, not an official Reddit client
-* Authentication is **not implemented**
-* Voting is UI-only (no persistence)
-* Some Reddit posts may have comments disabled
-
----
-
-## 📌 Goals of the Project
-
-* Practice **Redux Toolkit** in a real-world scenario
-* Learn how to normalize and flatten complex API responses
-* Separate UI and data-fetching responsibilities
-* Build a clean, scalable React + Redux architecture
-
----
-
-## 📄 License
-
-This project is for **educational purposes only**.
-
-```
+Name: Dániel Cserpák
+Portfolio: https://daniel-cserpak-portfolio.netlify.app/  
+LinkedIn: https://www.linkedin.com/in/d%C3%A1niel-cserp%C3%A1k-109057283/
