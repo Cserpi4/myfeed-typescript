@@ -40,3 +40,5 @@ Author
 Name: Dániel Cserpák
 Portfolio: https://daniel-cserpak-portfolio.netlify.app/  
 LinkedIn: https://www.linkedin.com/in/d%C3%A1niel-cserp%C3%A1k-109057283/
+
+Note: The public Reddit API occasionally causes timeout issues. The app uses a backend proxy and async handling, but free-tier limitations may affect initial load.
