@@ -1,7 +1,9 @@
+
 // src/features/comment/Comment.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, clearComments } from './commentSlice';
+import CommentText from '../../components/CommentText';
 import './Comment.css';
 
 const Comment = ({ subreddit, postId }) => {
@@ -42,7 +44,7 @@ const Comment = ({ subreddit, postId }) => {
           style={{ marginLeft: `${comment.depth * 16}px` }}
         >
           <div className="comment-author">u/{comment.author}</div>
-          <div className="comment-body">{comment.body}</div>
+          <CommentText text={comment.body} />
           <div className="comment-score">⬆ {comment.score}</div>
         </div>
       ))}

@@ -2,14 +2,15 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSubreddits,
-  setActiveSubreddit,
+  setActiveSubredditId,
+  fetchPostsBySubreddit,
 } from './subredditSlice';
 import './Subreddit.css';
 
 const Subreddit = () => {
   const dispatch = useDispatch();
 
-  const { subreddits, loading, error, activeSubreddit } = useSelector(
+  const { subreddits, loading, error, activeSubredditId } = useSelector(
     (state) => state.subreddits
   );
 
@@ -17,8 +18,13 @@ const Subreddit = () => {
     dispatch(fetchSubreddits());
   }, [dispatch]);
 
-  const handleSubredditClick = (subredditName) => {
-    dispatch(setActiveSubreddit(subredditName));
+  const handleSubredditClick = (id) => {
+    dispatch(setActiveSubredditId(id));
+    if (id === 'popular') {
+      // Itt ha van külön getPopular thunkod az első slice-ból, azt is megfuttathatod
+    } else {
+      dispatch(fetchPostsBySubreddit(id));
+    }
   };
 
   if (loading) {
@@ -34,7 +40,7 @@ const Subreddit = () => {
       <h3
         onClick={() => handleSubredditClick('popular')}
         className={`subreddit-header ${
-          activeSubreddit === 'popular' ? 'active' : ''
+          activeSubredditId === 'popular' || !activeSubredditId ? 'active' : ''
         }`}
       >
         Popular Subreddits
@@ -45,20 +51,17 @@ const Subreddit = () => {
           <li
             key={sub.id}
             className={`subreddit-item ${
-              activeSubreddit === sub.display_name ? 'active' : ''
+              activeSubredditId === sub.id ? 'active' : ''
             }`}
-            onClick={() => handleSubredditClick(sub.display_name)}
+            onClick={() => handleSubredditClick(sub.id)}
           >
             <img
-              src={
-                sub.icon_img ||
-                sub.community_icon?.split('?')[0] ||
-                'https://www.redditinc.com/assets/images/site/reddit-logo.png'
-              }
+              src={sub.icon_img || 'https://www.redditinc.com/assets/images/site/reddit-logo.png'}
               alt={sub.display_name}
               className="subreddit-avatar"
             />
-            <span>{sub.display_name_prefixed}</span>
+            {/* display_name_prefixed helyett display_name-et írunk ki */}
+            <span>c/{sub.display_name}</span>
           </li>
         ))}
       </ul>

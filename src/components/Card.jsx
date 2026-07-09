@@ -81,7 +81,7 @@ const Card = ({ post }) => {
         </p>
 
         <a
-          href={`https://reddit.com/r/${subreddit}/comments/${id}`}
+          href={`https://lemmy.world/post/${id}`}
           target="_blank"
           rel="noopener noreferrer"
           className="vote-button down"

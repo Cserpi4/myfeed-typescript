@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import RedditController from '../controllers/RedditController.js';
+import RedditController from '../controllers/FeedController.js';
 
 const router = Router();
 

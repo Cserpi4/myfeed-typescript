@@ -1,7 +1,7 @@
 {
-  "name": "myreddit",
+  "name": "myfeed",
   "version": "1.0.0",
-  "description": "Reddit clone React app",
+  "description": "Reddit-style feed viewer built with React, powered by the Lemmy API",
   "main": "src/app/index.js",
   "scripts": {
     "start": "react-scripts start",

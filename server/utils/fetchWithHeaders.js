@@ -1,14 +1,7 @@
 import axios from 'axios';
-import config from '../config/env.js';
+import env from '../config/env.js';
 
-const fetchWithHeaders = async (path) => {
-  const response = await axios.get(`${config.reddit.baseUrl}${path}`, {
-    headers: {
-      'User-Agent': config.reddit.userAgent,
-    },
-  });
-
+export default async function fetchWithHeaders(path, params = {}) {
+  const response = await axios.get(`${env.lemmy.baseUrl}${path}`, { params });
   return response.data;
-};
-
-export default fetchWithHeaders;
+}

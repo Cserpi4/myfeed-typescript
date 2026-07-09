@@ -1,9 +1,9 @@
-import redditService from '../services/redditService.js';
+import feedService from '../services/feedService.js';
 
-const RedditController = {
+const FeedController = {
   async getPopular(req, res, next) {
     try {
-      const data = await redditService.getPopular();
+      const data = await feedService.getPopular(); // ⚠️ redditService → feedService
       res.json(data);
     } catch (err) {
       next(err);
@@ -13,7 +13,7 @@ const RedditController = {
   async getSubreddit(req, res, next) {
     try {
       const { name } = req.params;
-      const data = await redditService.getSubreddit(name);
+      const data = await feedService.getSubreddit(name); // ⚠️
       res.json(data);
     } catch (err) {
       next(err);
@@ -23,7 +23,7 @@ const RedditController = {
   async getComments(req, res, next) {
     try {
       const { subreddit, postId } = req.params;
-      const data = await redditService.getComments(subreddit, postId);
+      const data = await feedService.getComments(subreddit, postId); // ⚠️
       res.json(data);
     } catch (err) {
       next(err);
@@ -33,7 +33,7 @@ const RedditController = {
   async search(req, res, next) {
     try {
       const { q } = req.query;
-      const data = await redditService.search(q);
+      const data = await feedService.search(q); // ⚠️
       res.json(data);
     } catch (err) {
       next(err);
@@ -42,7 +42,7 @@ const RedditController = {
 
   async getSubreddits(req, res, next) {
     try {
-      const data = await redditService.getSubreddits();
+      const data = await feedService.getSubreddits(); // ⚠️
       res.json(data);
     } catch (err) {
       next(err);
@@ -50,4 +50,4 @@ const RedditController = {
   },
 };
 
-export default RedditController;
+export default FeedController;

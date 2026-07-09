@@ -1,59 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import redditApi from '../../api/redditApi';
+import feedApi from '../../api/feedApi';
 
-// 🔥 Helper: Reddit comment tree flattenelése
-const flattenComments = (comments, depth = 0) => {
-  let result = [];
-
-  comments.forEach((item) => {
-    if (item.kind !== 't1') return;
-
-    const comment = item.data;
-
-    result.push({
-      id: comment.id,
-      author: comment.author,
-      body: comment.body,
-      score: comment.score,
-      created: comment.created_utc,
-      depth,
-    });
-
-    if (comment.replies?.data?.children?.length) {
-      result = result.concat(
-        flattenComments(comment.replies.data.children, depth + 1)
-      );
-    }
-  });
-
-  return result;
-};
-
-// --- Fetch comments for a post ---
 export const fetchComments = createAsyncThunk(
   'comment/fetchComments',
   async ({ subreddit, postId }, { rejectWithValue }) => {
     try {
-      const response = await redditApi.fetchComments(subreddit, postId);
-
-      const commentListing = response?.[1]?.data?.children || [];
-
-      return flattenComments(commentListing);
+      // 🔥 getComments helyett fetchComments-et hívunk, mert ez van a fájlban!
+      return await feedApi.fetchComments(subreddit, postId);
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to fetch comments');
     }
   }
 );
 
-const initialState = {
-  comments: [],      // ⚠️ mindig lapított tömb
-  loading: false,
-  error: null,
-};
-
 const commentSlice = createSlice({
   name: 'comment',
-  initialState,
+  initialState: {
+    comments: [],
+    loading: false,
+    error: null,
+  },
   reducers: {
     clearComments(state) {
       state.comments = [];

@@ -7,9 +7,8 @@ const env = {
     port: process.env.PORT || 3000,
     clientUrl: process.env.CLIENT_URL || 'http://localhost:3001',
   },
-  reddit: {
-    baseUrl: 'https://www.reddit.com',
-    userAgent: 'MyRedditApp/1.0 (by u/yourusername)',
+  lemmy: {
+    baseUrl: process.env.LEMMY_INSTANCE_URL || 'https://lemmy.world',
   },
 };
 

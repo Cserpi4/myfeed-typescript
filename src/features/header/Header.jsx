@@ -51,7 +51,7 @@ const Header = ({ onToggleTheme, currentTheme }) => {
         onClick={() => navigate('/')}
         style={{ cursor: 'pointer' }}
       >
-        MyReddit
+        MyFeed
       </div>
 
       <div className="header-right">
@@ -59,7 +59,7 @@ const Header = ({ onToggleTheme, currentTheme }) => {
           <form className="search-form" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Search Reddit..."
+              placeholder="Search..."
               value={searchTerm}
               onChange={(e) => {
                 dispatch(setSearchTerm(e.target.value));

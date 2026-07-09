@@ -1,24 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import redditApi from '../../api/redditApi';
+import feedApi from '../../api/feedApi';
 
-// --- Fetch popular subreddits ---
 export const fetchSubreddits = createAsyncThunk(
   'subreddits/fetchSubreddits',
   async (_, { rejectWithValue }) => {
     try {
-      return await redditApi.fetchSubreddits();
+      return await feedApi.fetchSubreddits();
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to fetch subreddits');
     }
   }
 );
 
-// --- Fetch posts for selected subreddit ---
 export const fetchPostsBySubreddit = createAsyncThunk(
   'subreddits/fetchPostsBySubreddit',
-  async (subreddit, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      return await redditApi.fetchSubreddit(subreddit);
+      return await feedApi.fetchSubreddit(id);
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to fetch subreddit posts');
     }
@@ -29,19 +27,18 @@ const subredditSlice = createSlice({
   name: 'subreddits',
   initialState: {
     subreddits: [],
-    activeSubreddit: 'popular',
+    activeSubredditId: null,
     posts: [],
     loading: false,
     error: null,
   },
   reducers: {
-    setActiveSubreddit(state, action) {
-      state.activeSubreddit = action.payload;
+    setActiveSubredditId(state, action) {
+      state.activeSubredditId = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      // --- Load subreddit list ---
       .addCase(fetchSubreddits.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -56,8 +53,6 @@ const subredditSlice = createSlice({
         state.error = action.payload || action.error.message;
         state.subreddits = [];
       })
-
-      // --- Load posts by subreddit (NORMALIZÁLT) ---
       .addCase(fetchPostsBySubreddit.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -75,5 +70,5 @@ const subredditSlice = createSlice({
   },
 });
 
-export const { setActiveSubreddit } = subredditSlice.actions;
+export const { setActiveSubredditId } = subredditSlice.actions;
 export default subredditSlice.reducer;

@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import redditApi from '../../api/redditApi';
+import feedApi from '../../api/feedApi';
 
 export const fetchPosts = createAsyncThunk(
   'home/fetchPosts',
   async ({ subreddit, searchTerm }, { rejectWithValue }) => {
     try {
       if (searchTerm) {
-        return await redditApi.search(searchTerm);
+        return await feedApi.search(searchTerm);
       }
 
       if (subreddit && subreddit !== 'popular') {
-        return await redditApi.fetchSubreddit(subreddit);
+        return await feedApi.fetchSubreddit(subreddit);
       }
 
-      return await redditApi.fetchPosts();
+      return await feedApi.fetchPosts();
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to fetch posts');
     }

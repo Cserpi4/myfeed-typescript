@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import redditApi from '../../api/redditApi';
+import feedApi from '../../api/feedApi';
 
 // --- Async thunk for Reddit search ---
 export const fetchSearchResults = createAsyncThunk(
   'search/fetchSearchResults',
   async (query, { rejectWithValue }) => {
     try {
-      const response = await redditApi.search(query);
+      const response = await feedApi.search(query);
 
       return (
         response?.data?.children?.map((child) => child.data) || []

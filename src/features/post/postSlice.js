@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import redditApi from '../../api/redditApi';
+import feedApi from '../../api/feedApi';
 
 export const fetchPostFeed = createAsyncThunk(
   'post/fetchPostFeed',
@@ -7,8 +7,8 @@ export const fetchPostFeed = createAsyncThunk(
     try {
       const response =
         subreddit === 'popular'
-          ? await redditApi.fetchPosts()
-          : await redditApi.fetchSubreddit(subreddit);
+          ? await feedApi.fetchPosts()
+          : await feedApi.fetchSubreddit(subreddit);
 
       return (
         response?.data?.children?.map((child) => child.data) || []
