@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import FeedRoutes from '../routes/FeedRoutes.js'; // ⚠️ fájlnév javítva
+import FeedRoutes from '../routes/FeedRoutes.js';
 import errorMiddleware from '../middlewares/errorMiddleware.js';
 
 const expressLoader = () => {
@@ -9,7 +9,7 @@ const expressLoader = () => {
   app.use(
     cors({
       origin: [
-        'https://myreddit-demo.netlify.app', // ezt is majd myfeed-re, ha átnevezed a Netlify appot
+        'https://myfeed-demo.netlify.app',
         'http://localhost:3001',
       ],
       methods: ['GET', 'POST'],
@@ -17,7 +17,7 @@ const expressLoader = () => {
   );
 
   app.use(express.json());
-  app.use('/api/feed', FeedRoutes); // ⚠️ mount path javítva /api/reddit → /api/feed
+  app.use('/api/feed', FeedRoutes);
   app.use(errorMiddleware);
 
   return app;
