@@ -2,28 +2,27 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSubreddits,
-  setActiveSubredditId,
+  setActiveSubreddit,
   fetchPostsBySubreddit,
 } from './subredditSlice';
+import { RootState } from '../../store/rootReducer';
 import './Subreddit.css';
 
 const Subreddit = () => {
   const dispatch = useDispatch();
 
-  const { subreddits, loading, error, activeSubredditId } = useSelector(
-    (state) => state.subreddits
+  const { subreddits, loading, error, activeSubreddit } = useSelector(
+    (state: RootState) => state.subreddits
   );
 
   useEffect(() => {
-    dispatch(fetchSubreddits());
+    dispatch(fetchSubreddits() as any);
   }, [dispatch]);
 
-  const handleSubredditClick = (id) => {
-    dispatch(setActiveSubredditId(id));
-    if (id === 'popular') {
-      // Itt ha van külön getPopular thunkod az első slice-ból, azt is megfuttathatod
-    } else {
-      dispatch(fetchPostsBySubreddit(id));
+  const handleSubredditClick = (name: string) => {
+    dispatch(setActiveSubreddit(name));
+    if (name !== 'popular') {
+      dispatch(fetchPostsBySubreddit(name) as any);
     }
   };
 
@@ -40,7 +39,7 @@ const Subreddit = () => {
       <h3
         onClick={() => handleSubredditClick('popular')}
         className={`subreddit-header ${
-          activeSubredditId === 'popular' || !activeSubredditId ? 'active' : ''
+          activeSubreddit === 'popular' || !activeSubreddit ? 'active' : ''
         }`}
       >
         Popular Subreddits
@@ -49,18 +48,20 @@ const Subreddit = () => {
       <ul>
         {subreddits.map((sub) => (
           <li
-            key={sub.id}
+            key={sub.display_name}
             className={`subreddit-item ${
-              activeSubredditId === sub.id ? 'active' : ''
+              activeSubreddit === sub.display_name ? 'active' : ''
             }`}
-            onClick={() => handleSubredditClick(sub.id)}
+            onClick={() => handleSubredditClick(sub.display_name)}
           >
             <img
-              src={sub.icon_img || 'https://www.redditinc.com/assets/images/site/reddit-logo.png'}
+              src={
+                sub.icon_img ||
+                'https://www.redditinc.com/assets/images/site/reddit-logo.png'
+              }
               alt={sub.display_name}
               className="subreddit-avatar"
             />
-            {/* display_name_prefixed helyett display_name-et írunk ki */}
             <span>c/{sub.display_name}</span>
           </li>
         ))}

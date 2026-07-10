@@ -2,7 +2,38 @@ import React, { useState } from 'react';
 import Comment from '../features/comment/Comment';
 import './Card.css';
 
-const Card = ({ post }) => {
+interface PostPreviewImage {
+  resolutions: { url: string }[];
+}
+
+interface PostPreview {
+  images?: PostPreviewImage[];
+}
+
+interface SubredditDetail {
+  icon_img?: string | null;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  thumbnail?: string | null;
+  preview?: PostPreview | null;
+  subreddit: string;
+  subreddit_name_prefixed: string;
+  author: string;
+  ups: number;
+  created_utc: number;
+  num_comments: number;
+  sr_detail?: SubredditDetail;
+  subreddit_icon_img?: string | null;
+}
+
+interface CardProps {
+  post: Post;
+}
+
+const Card = ({ post }: CardProps) => {
   const {
     id,
     title,
@@ -29,13 +60,10 @@ const Card = ({ post }) => {
 
   const avatarUrl = sr_detail?.icon_img || subreddit_icon_img;
 
-  // 💡 Vote state (UI only)
-  const [vote, setVote] = useState(0);
-  const [score, setScore] = useState(ups);
-  const [animate, setAnimate] = useState(false);
-
-  // 💬 Comment toggle
-  const [showComments, setShowComments] = useState(false);
+  const [vote, setVote] = useState<number>(0);
+  const [score, setScore] = useState<number>(ups);
+  const [animate, setAnimate] = useState<boolean>(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
 
   const triggerAnimation = () => {
     setAnimate(true);
@@ -73,7 +101,7 @@ const Card = ({ post }) => {
           className={`vote-button up ${vote === 1 ? 'active' : ''}`}
           onClick={handleUpvote}
         >
-          ⬆
+          Up
         </button>
 
         <p className={`vote-score ${animate ? 'pop' : ''}`}>
@@ -81,12 +109,12 @@ const Card = ({ post }) => {
         </p>
 
         <a
-          href={`https://lemmy.world/post/${id}`}
+          href={"https://lemmy.world/post/" + id}
           target="_blank"
           rel="noopener noreferrer"
           className="vote-button down"
         >
-          ⬇
+          Down
         </a>
       </div>
 
@@ -104,20 +132,18 @@ const Card = ({ post }) => {
 
         <div className="card-footer">
           <span>
-            Posted by <strong>{author}</strong> • {postTime}
+            Posted by <strong>{author}</strong> - {postTime}
           </span>
 
           <button
             className="comment-toggle"
             onClick={() => setShowComments((prev) => !prev)}
           >
-            💬 {num_comments} {showComments ? 'Hide' : 'Show'}
+            Comments {num_comments} {showComments ? 'Hide' : 'Show'}
           </button>
         </div>
 
-        {showComments && (
-          <Comment subreddit={subreddit} postId={id} />
-        )}
+        {showComments && <Comment subreddit={subreddit} postId={id} />}
       </div>
     </div>
   );

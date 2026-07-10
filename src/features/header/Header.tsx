@@ -3,18 +3,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSearchTerm } from './headerSlice';
 import { fetchSearchResults, clearResults } from '../search/searchSlice';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../store/rootReducer';
 import './Header.css';
 
-const Header = ({ onToggleTheme, currentTheme }) => {
+interface HeaderProps {
+  onToggleTheme: () => void;
+  currentTheme: 'light' | 'dark';
+}
+
+const Header = ({ onToggleTheme, currentTheme }: HeaderProps) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const searchTerm = useSelector((state) => state.header.searchTerm);
-  const { results, loading } = useSelector((state) => state.search);
+  const searchTerm = useSelector((state: RootState) => state.header.searchTerm);
+  const { results, loading } = useSelector((state: RootState) => state.search);
 
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
-  // 🔍 debounce + Redux search
   useEffect(() => {
     if (searchTerm.trim().length < 3) {
       dispatch(clearResults());
@@ -22,13 +27,13 @@ const Header = ({ onToggleTheme, currentTheme }) => {
     }
 
     const timeout = setTimeout(() => {
-      dispatch(fetchSearchResults(searchTerm));
+      dispatch(fetchSearchResults(searchTerm) as any);
     }, 400);
 
     return () => clearTimeout(timeout);
   }, [dispatch, searchTerm]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const query = searchTerm.trim();
 
@@ -38,7 +43,7 @@ const Header = ({ onToggleTheme, currentTheme }) => {
     setShowSuggestions(false);
   };
 
-  const handleSelectSuggestion = (text) => {
+  const handleSelectSuggestion = (text: string) => {
     dispatch(setSearchTerm(text));
     navigate(`/search/${encodeURIComponent(text)}`);
     setShowSuggestions(false);
@@ -104,7 +109,7 @@ const Header = ({ onToggleTheme, currentTheme }) => {
           aria-label="Toggle theme"
         >
           <span className="theme-emoji">
-            {currentTheme === 'light' ? '🌙' : '☀️'}
+            {currentTheme === 'light' ? 'Moon' : 'Sun'}
           </span>
           <span className="theme-label">
             {currentTheme === 'light' ? 'Light' : 'Dark'}

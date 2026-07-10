@@ -1,4 +1,3 @@
-// src/store/rootReducer.js
 import { combineReducers } from '@reduxjs/toolkit';
 
 import avatarReducer from '../features/avatar/avatarSlice';
@@ -19,4 +18,5 @@ const rootReducer = combineReducers({
   search: searchReducer,
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

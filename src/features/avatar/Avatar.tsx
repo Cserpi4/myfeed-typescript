@@ -1,8 +1,14 @@
 import React from 'react';
 import './Avatar.css';
 
-const Avatar = ({ src, alt = 'User avatar', size = 50 }) => {
-  const style = {
+interface AvatarProps {
+  src?: string | null;
+  alt?: string;
+  size?: number;
+}
+
+const Avatar = ({ src, alt = 'User avatar', size = 50 }: AvatarProps) => {
+  const style: React.CSSProperties = {
     width: size,
     height: size,
     borderRadius: '50%',

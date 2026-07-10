@@ -1,21 +1,25 @@
-
-// src/features/comment/Comment.jsx
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, clearComments } from './commentSlice';
+import { RootState } from '../../store/rootReducer';
 import CommentText from '../../components/CommentText';
 import './Comment.css';
 
-const Comment = ({ subreddit, postId }) => {
+interface CommentProps {
+  subreddit: string;
+  postId: string;
+}
+
+const Comment = ({ subreddit, postId }: CommentProps) => {
   const dispatch = useDispatch();
 
-  const comments = useSelector((state) => state.comment.comments);
-  const loading = useSelector((state) => state.comment.loading);
-  const error = useSelector((state) => state.comment.error);
+  const comments = useSelector((state: RootState) => state.comment.comments);
+  const loading = useSelector((state: RootState) => state.comment.loading);
+  const error = useSelector((state: RootState) => state.comment.error);
 
   useEffect(() => {
     if (subreddit && postId) {
-      dispatch(fetchComments({ subreddit, postId }));
+      dispatch(fetchComments({ subreddit, postId }) as any);
     }
 
     return () => {
@@ -38,14 +42,10 @@ const Comment = ({ subreddit, postId }) => {
       )}
 
       {comments.map((comment) => (
-        <div
-          key={comment.id}
-          className="comment-card"
-          style={{ marginLeft: `${comment.depth * 16}px` }}
-        >
+        <div key={comment.id} className="comment-card">
           <div className="comment-author">u/{comment.author}</div>
           <CommentText text={comment.body} />
-          <div className="comment-score">⬆ {comment.score}</div>
+          <div className="comment-score">Score: {comment.score}</div>
         </div>
       ))}
     </div>

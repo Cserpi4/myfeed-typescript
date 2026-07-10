@@ -1,30 +1,38 @@
 import client from './client';
 
+interface FeedResponse {
+  data: {
+    children: { data: any }[];
+  };
+}
+
 const feedApi = {
-  async fetchPosts() {
+  async fetchPosts(): Promise<FeedResponse> {
     const response = await client.get('/api/feed/popular');
     return response.data;
   },
 
-  async fetchSubreddit(subreddit) {
+  async fetchSubreddit(subreddit: string): Promise<FeedResponse> {
     const response = await client.get(`/api/feed/subreddit/${subreddit}`);
     return response.data;
   },
 
-  async fetchComments(subreddit, postId) {
+  async fetchComments(subreddit: string, postId: string): Promise<any> {
     const response = await client.get(
       `/api/feed/comments/${subreddit}/${postId}`
     );
     return response.data;
   },
 
-  async fetchSubreddits() {
+  async fetchSubreddits(): Promise<FeedResponse> {
     const response = await client.get('/api/feed/subreddits');
     return response.data;
   },
 
-  async search(query) {
-    const response = await client.get(`/api/feed/search?q=${encodeURIComponent(query)}`);
+  async search(query: string): Promise<FeedResponse> {
+    const response = await client.get(
+      `/api/feed/search?q=${encodeURIComponent(query)}`
+    );
     return response.data;
   },
 };

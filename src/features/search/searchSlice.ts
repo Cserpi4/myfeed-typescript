@@ -1,37 +1,44 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import feedApi from '../../api/feedApi';
 
-// --- Async thunk for Reddit search ---
+interface SearchResult {
+  id: string;
+  title?: string;
+  display_name_prefixed?: string;
+  [key: string]: any;
+}
+
+interface SearchState {
+  results: SearchResult[];
+  loading: boolean;
+  error: string | null;
+}
+
 export const fetchSearchResults = createAsyncThunk(
   'search/fetchSearchResults',
-  async (query, { rejectWithValue }) => {
+  async (query: string, { rejectWithValue }) => {
     try {
       const response = await feedApi.search(query);
-
-      return (
-        response?.data?.children?.map((child) => child.data) || []
-      );
-    } catch (error) {
-      return rejectWithValue(error.message || 'Search failed');
+      return response?.data?.children?.map((child: any) => child.data) || [];
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch search results');
     }
   }
 );
 
+const initialState: SearchState = {
+  results: [],
+  loading: false,
+  error: null,
+};
+
 const searchSlice = createSlice({
   name: 'search',
-  initialState: {
-    query: '',
-    results: [],   // ⚠️ mindig tömb
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
-    setQuery(state, action) {
-      state.query = action.payload;
-    },
     clearResults(state) {
       state.results = [];
-      state.query = '';
+      state.loading = false;
       state.error = null;
     },
   },
@@ -43,15 +50,15 @@ const searchSlice = createSlice({
       })
       .addCase(fetchSearchResults.fulfilled, (state, action) => {
         state.loading = false;
-        state.results = action.payload;
+        state.results = action.payload || [];
       })
       .addCase(fetchSearchResults.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || action.error.message;
+        state.error = (action.payload as string) || action.error.message || null;
         state.results = [];
       });
   },
 });
 
-export const { setQuery, clearResults } = searchSlice.actions;
+export const { clearResults } = searchSlice.actions;
 export default searchSlice.reducer;

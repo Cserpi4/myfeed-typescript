@@ -1,7 +1,10 @@
-// src/features/header/headerSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {
+interface HeaderState {
+  searchTerm: string;
+}
+
+const initialState: HeaderState = {
   searchTerm: '',
 };
 
@@ -9,7 +12,7 @@ const headerSlice = createSlice({
   name: 'header',
   initialState,
   reducers: {
-    setSearchTerm(state, action) {
+    setSearchTerm(state, action: PayloadAction<string>) {
       state.searchTerm = action.payload;
     },
     clearSearchTerm(state) {

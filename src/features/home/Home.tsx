@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts } from './homeSlice';
+import { RootState } from '../../store/rootReducer';
 import Card from '../../components/Card';
 import './Home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
 
-  const posts = useSelector((state) => state.home.posts);
-  const loading = useSelector((state) => state.home.loading);
-  const error = useSelector((state) => state.home.error);
+  const posts = useSelector((state: RootState) => state.home.posts);
+  const loading = useSelector((state: RootState) => state.home.loading);
+  const error = useSelector((state: RootState) => state.home.error);
 
   const activeSubreddit = useSelector(
-    (state) => state.subreddits?.activeSubreddit
+    (state: RootState) => state.subreddits?.activeSubreddit
   );
 
   const searchTerm = useSelector(
-    (state) => state.header?.searchTerm
+    (state: RootState) => state.header?.searchTerm
   );
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const Home = () => {
       fetchPosts({
         subreddit: activeSubreddit || 'popular',
         searchTerm: searchTerm || '',
-      })
+      }) as any
     );
   }, [dispatch, activeSubreddit, searchTerm]);
 
@@ -43,20 +44,15 @@ const Home = () => {
       </h2>
 
       <div className="posts-list">
-        {loading && (
+        {loading &&
           Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="skeleton-card" />
-          ))
-        )}
+          ))}
 
-        {!loading && posts.length === 0 && (
-          <div>No posts found.</div>
-        )}
+        {!loading && posts.length === 0 && <div>No posts found.</div>}
 
         {!loading &&
-          posts.map((post) => (
-            <Card key={post.id} post={post} />
-          ))}
+          posts.map((post) => <Card key={post.id} post={post} />)}
       </div>
     </div>
   );

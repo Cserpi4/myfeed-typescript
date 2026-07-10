@@ -1,27 +1,37 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import feedApi from '../../api/feedApi';
 
+interface Post {
+  id: string;
+  title: string;
+  [key: string]: any;
+}
+
+interface PostState {
+  posts: Post[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
 export const fetchPostFeed = createAsyncThunk(
   'post/fetchPostFeed',
-  async (subreddit = 'popular', { rejectWithValue }) => {
+  async (subreddit: string = 'popular', { rejectWithValue }) => {
     try {
       const response =
         subreddit === 'popular'
           ? await feedApi.fetchPosts()
           : await feedApi.fetchSubreddit(subreddit);
 
-      return (
-        response?.data?.children?.map((child) => child.data) || []
-      );
-    } catch (error) {
+      return response?.data?.children?.map((child: any) => child.data) || [];
+    } catch (error: any) {
       return rejectWithValue(error.message || 'Failed to fetch posts');
     }
   }
 );
 
-const initialState = {
+const initialState: PostState = {
   posts: [],
-  status: 'idle', // idle | loading | succeeded | failed
+  status: 'idle',
   error: null,
 };
 
@@ -46,7 +56,7 @@ const postSlice = createSlice({
       })
       .addCase(fetchPostFeed.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload || action.error.message;
+        state.error = (action.payload as string) || action.error.message || null;
         state.posts = [];
       });
   },

@@ -5,8 +5,10 @@ import Home from './features/home/Home';
 import Subreddit from './features/subreddits/Subreddit';
 import './App.css';
 
+type Theme = 'light' | 'dark';
+
 function App() {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
