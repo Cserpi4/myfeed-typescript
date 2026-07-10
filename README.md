@@ -1,6 +1,6 @@
-MyFeed (Demo)
+MyFeed – TypeScript Edition (Demo)
 
-A Reddit-style demo application built with React, Redux Toolkit, and a custom Express backend.  
+A Reddit-style demo application built with React, TypeScript, Redux Toolkit, and a custom Express backend.  
 The app uses the Lemmy API through a backend proxy and displays posts, communities, search results, and comments in a clean, responsive UI.
 
 Features
@@ -17,6 +17,7 @@ Tech stack
 
 Frontend
 - React
+- TypeScript
 - Redux Toolkit
 - Async state handling with `createAsyncThunk`
 - Feature-based folder structure
@@ -29,11 +30,15 @@ Backend
 - Handles CORS and centralizes API calls
 - Keeps the frontend clean and secure
 
-Frontend (React)
+Frontend (React + TypeScript)
 ↓ axios
 Backend (Express)
 ↓ fetch
 Lemmy API
+
+Why TypeScript?
+
+This project started as a JavaScript application. It was migrated to TypeScript component by component, Redux slice by Redux slice, following a bottom-up approach: utilities and leaf components first, shared types and the store last. Shared interfaces (e.g. a single `Post` type used across components and slices) replace scattered `PropTypes` checks, catching mismatches at compile time instead of at runtime.
 
 Why Lemmy instead of Reddit?
 
