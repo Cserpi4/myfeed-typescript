@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import FeedRoutes from '../routes/FeedRoutes.js';
 import errorMiddleware from '../middlewares/errorMiddleware.js';
 
-const expressLoader = () => {
+const expressLoader = (): Application => {
   const app = express();
 
   app.use(
